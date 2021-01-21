@@ -1,0 +1,22 @@
+name: CimeyCraft
+api: 1.0.0
+version: "${pom.version}"
+main: de.cimeyclust.BedWars
+author: Verox007
+description: A BedWars plugin in NukkitX and PowerNukkit for Minecraft Bedrock.
+website: https://cimeycraft.de/minecraft/plugins
+depend:
+  - FakeInventories
+
+commands:
+  bedwars:
+    description: BedWars-Plugin Main-Command
+    usage: "§c/bedwars"
+    permission: bedwars
+
+
+permissions:
+  bedwars:
+    description: "Allows user to manage everything that have to do with BedWars"
+    default: op
+

@@ -5,15 +5,15 @@ import de.cimeyclust.BedWars;
 
 import java.io.File;
 
-public class BedWarsConfig
+public class RoundManager
 {
     private BedWars plugin;
     private File file;
     private Config config;
 
-    public BedWarsConfig(BedWars plugin) {
+    public RoundManager(BedWars plugin) {
         this.plugin = plugin;
-        this.file = new File(plugin.getDataFolder(), "config.yml");
+        this.file = new File(plugin.getDataFolder(), "bedwars.yml");
         this.config = new Config(this.file, Config.YAML);
     }
 
@@ -22,11 +22,5 @@ public class BedWarsConfig
 
     // Setter Methods
 
-    public void addDefault()
-    {
-        if(!this.file.exists())
-        {
-            this.config.set("config.backupFunction", true);
-        }
-    }
+
 }
