@@ -22,5 +22,8 @@ public class RoundManager
 
     // Setter Methods
 
+    public void createRound(int playerPerTeam, int duration)
+    {
 
+    }
 }

@@ -27,6 +27,8 @@ public class BedWarsConfig
         if(!this.file.exists())
         {
             this.config.set("config.backupFunction", true);
+            this.config.set("config.round.duration", 300);
         }
+        this.config.save(this.file);
     }
 }
