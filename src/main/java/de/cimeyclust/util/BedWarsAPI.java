@@ -1,9 +1,7 @@
 package de.cimeyclust.util;
 
 import cn.nukkit.Player;
-import cn.nukkit.block.Block;
-import cn.nukkit.block.BlockBed;
-import cn.nukkit.block.BlockClay;
+import cn.nukkit.block.*;
 import cn.nukkit.level.Level;
 import cn.nukkit.level.Location;
 import cn.nukkit.utils.Config;
@@ -82,6 +80,34 @@ public class BedWarsAPI
         }
     }
 
+    public BlockIron getIronSpawner(String name, int index)
+    {
+        if(this.config.exists("bedwars."+name+".ironSpawners."+index)) {
+            int x = this.config.getInt("bedwars." + name + ".ironSpawners.ironSpawner" + index + ".spawnerX");
+            int y = this.config.getInt("bedwars." + name + ".ironSpawners.ironSpawner" + index + ".spawnerY");
+            int z = this.config.getInt("bedwars." + name + ".ironSpawners.ironSpawner" + index + ".spawnerZ");
+            return (BlockIron) this.getWorld(name).getBlock(x, y, z);
+        }
+        else
+        {
+            return null;
+        }
+    }
+
+    public BlockGold getGoldSpawner(String name, int index)
+    {
+        if(this.config.exists("bedwars."+name+".goldSpawners."+index)) {
+            int x = this.config.getInt("bedwars." + name + ".goldSpawners.goldSpawner" + index + ".spawnerX");
+            int y = this.config.getInt("bedwars." + name + ".goldSpawners.goldSpawner" + index + ".spawnerY");
+            int z = this.config.getInt("bedwars." + name + ".goldSpawners.goldSpawner" + index + ".spawnerZ");
+            return (BlockGold) this.getWorld(name).getBlock(x, y, z);
+        }
+        else
+        {
+            return null;
+        }
+    }
+
     // Setup
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -108,6 +134,11 @@ public class BedWarsAPI
     public Integer getLastIndexOfClaySpawner(Player player)
     {
         return this.config.getInt("bedwars."+this.plugin.getBedWarsAPI().getSetupName(player)+".claySpawners.lastIndex");
+    }
+
+    public Integer getLastIndexOfGoldSpawner(Player player)
+    {
+        return this.config.getInt("bedwars."+this.plugin.getBedWarsAPI().getSetupName(player)+".goldSpawners.lastIndex");
     }
 
     public String getSetupName(Player player)
@@ -138,6 +169,16 @@ public class BedWarsAPI
     public Boolean getSetupClaySpawner(Player player)
     {
         return this.config.getBoolean("bedwars.setup."+player.getName()+".claySpawner");
+    }
+
+    public Boolean getSetupIronSpawner(Player player)
+    {
+        return this.config.getBoolean("bedwars.setup."+player.getName()+".ironSpawner");
+    }
+
+    public Boolean getSetupGoldSpawner(Player player)
+    {
+        return this.config.getBoolean("bedwars.setup."+player.getName()+".goldSpawner");
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -249,6 +290,8 @@ public class BedWarsAPI
 
     public void setClaySpawner(Player player, BlockClay blockClay, int index)
     {
+        this.config.set("bedwars."+this.getSetupName(player)+".claySpawners.lastIndex", index);
+        this.config.save(this.file);
         this.config.set("bedwars."+this.getSetupName(player)+".claySpawners.claySpawner"+index+".spawnerX", blockClay.getX());
         this.config.set("bedwars."+this.getSetupName(player)+".claySpawners.claySpawner"+index+".spawnerY", blockClay.getY());
         this.config.set("bedwars."+this.getSetupName(player)+".claySpawners.claySpawner"+index+".spawnerZ", blockClay.getZ());
@@ -256,6 +299,55 @@ public class BedWarsAPI
         {
             this.config.set("bedwars.setup."+player.getName()+".claySpawner", false);
             player.sendMessage("§aFor each team, hit a block of iron with the left or right mouse button to add them as iron spawner.");
+            this.setupIronSpawner(player);
+        }
+
+        this.config.save(this.file);
+    }
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public void setupIronSpawner(Player player)
+    {
+        this.config.set("bedwars.setup."+player.getName()+".ironSpawner", true);
+        this.config.save(this.file);
+    }
+
+    public void setIronSpawner(Player player, BlockIron blockIron, int index)
+    {
+        this.config.set("bedwars."+this.getSetupName(player)+".ironSpawners.lastIndex", index);
+        this.config.save(this.file);
+        this.config.set("bedwars."+this.getSetupName(player)+".ironSpawners.ironSpawner"+index+".spawnerX", blockIron.getX());
+        this.config.set("bedwars."+this.getSetupName(player)+".ironSpawners.ironSpawner"+index+".spawnerY", blockIron.getY());
+        this.config.set("bedwars."+this.getSetupName(player)+".ironSpawners.ironSpawner"+index+".spawnerZ", blockIron.getZ());
+        if(index == this.getTeamNumber(this.getSetupName(player)))
+        {
+            this.config.set("bedwars.setup."+player.getName()+".ironSpawner", false);
+            player.sendMessage("§aFor each team, hit a block of gold with the left or right mouse button to add them as gold spawner.");
+        }
+
+        this.config.save(this.file);
+    }
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public void setupGoldSpawner(Player player)
+    {
+        this.config.set("bedwars.setup."+player.getName()+".goldSpawner", true);
+        this.config.save(this.file);
+    }
+
+    public void setGoldSpawner(Player player, BlockGold blockGold, int index)
+    {
+        this.config.set("bedwars."+this.getSetupName(player)+".goldSpawners.lastIndex", index);
+        this.config.save(this.file);
+        this.config.set("bedwars."+this.getSetupName(player)+".goldSpawners.goldSpawner"+index+".spawnerX", blockGold.getX());
+        this.config.set("bedwars."+this.getSetupName(player)+".goldSpawners.goldSpawner"+index+".spawnerY", blockGold.getY());
+        this.config.set("bedwars."+this.getSetupName(player)+".goldSpawners.goldSpawner"+index+".spawnerZ", blockGold.getZ());
+        if(index == this.getTeamNumber(this.getSetupName(player)))
+        {
+            this.config.set("bedwars.setup."+player.getName()+".goldSpawner", false);
+            player.sendMessage("§aHit the block that will be marked as the lobby spawn point.");
         }
 
         this.config.save(this.file);
