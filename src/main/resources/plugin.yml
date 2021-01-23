@@ -1,6 +1,6 @@
 name: BedWars
 api: 1.0.0
-version: 1.0.0
+version: 1.0.1
 main: de.cimeyclust.BedWars
 author: Verox007
 description: A BedWars plugin in NukkitX and PowerNukkit for Minecraft Bedrock.

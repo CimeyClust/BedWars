@@ -4,6 +4,7 @@ package de.cimeyclust.listener;
 import cn.nukkit.Player;
 import cn.nukkit.block.Block;
 import cn.nukkit.block.BlockBed;
+import cn.nukkit.block.BlockClay;
 import cn.nukkit.event.EventHandler;
 import cn.nukkit.event.Listener;
 import cn.nukkit.event.player.PlayerChatEvent;
@@ -105,6 +106,26 @@ public class SetupListener implements Listener
                 return;
             }
         }
+        else if(this.plugin.getBedWarsAPI().getSetupBed(player))
+        {
+            if(message.equals("cancel"))
+            {
+                this.plugin.getBedWarsAPI().setupCancel(player);
+                player.sendMessage("§cSetup was canceled successfully!");
+                event.setCancelled(true);
+                return;
+            }
+        }
+        else if(this.plugin.getBedWarsAPI().getSetupClaySpawner(player))
+        {
+            if(message.equals("cancel"))
+            {
+                this.plugin.getBedWarsAPI().setupCancel(player);
+                player.sendMessage("§cSetup was canceled successfully!");
+                event.setCancelled(true);
+                return;
+            }
+        }
     }
 
     @EventHandler
@@ -119,65 +140,334 @@ public class SetupListener implements Listener
             {
                 if(block instanceof BlockBed && block.getLevel().equals(this.plugin.getBedWarsAPI().getWorld(this.plugin.getBedWarsAPI().getSetupName(player))))
                 {
-                    if(!this.plugin.getBedWarsAPI().checkIfExists(this.plugin.getBedWarsAPI().getSetupName(player)+"beds."+1))
+                    if(this.plugin.getBedWarsAPI().getBed(this.plugin.getBedWarsAPI().getSetupName(player), 1) != null) {
+                        if (block.equals(this.plugin.getBedWarsAPI().getBed(this.plugin.getBedWarsAPI().getSetupName(player), 1)))
+                        {
+                            player.sendMessage("§cYou have already chosen this bed!");
+                            event.setCancelled(true);
+                            return;
+                        }
+                    }
+                    if(this.plugin.getBedWarsAPI().getBed(this.plugin.getBedWarsAPI().getSetupName(player), 2) != null) {
+                        if (block.equals(this.plugin.getBedWarsAPI().getBed(this.plugin.getBedWarsAPI().getSetupName(player), 2)))
+                        {
+                            player.sendMessage("§cYou have already chosen this bed!");
+                            event.setCancelled(true);
+                            return;
+                        }
+                    }
+                    if(this.plugin.getBedWarsAPI().getBed(this.plugin.getBedWarsAPI().getSetupName(player), 3) != null) {
+                        if (block.equals(this.plugin.getBedWarsAPI().getBed(this.plugin.getBedWarsAPI().getSetupName(player), 3)))
+                        {
+                            player.sendMessage("§cYou have already chosen this bed!");
+                            event.setCancelled(true);
+                            return;
+                        }
+                    }
+                    if(this.plugin.getBedWarsAPI().getBed(this.plugin.getBedWarsAPI().getSetupName(player), 4) != null) {
+                        if (block.equals(this.plugin.getBedWarsAPI().getBed(this.plugin.getBedWarsAPI().getSetupName(player), 4)))
+                        {
+                            player.sendMessage("§cYou have already chosen this bed!");
+                            event.setCancelled(true);
+                            return;
+                        }
+                    }
+                    if(this.plugin.getBedWarsAPI().getBed(this.plugin.getBedWarsAPI().getSetupName(player), 5) != null) {
+                        if (block.equals(this.plugin.getBedWarsAPI().getBed(this.plugin.getBedWarsAPI().getSetupName(player), 5)))
+                        {
+                            player.sendMessage("§cYou have already chosen this bed!");
+                            event.setCancelled(true);
+                            return;
+                        }
+                    }
+                    if(this.plugin.getBedWarsAPI().getBed(this.plugin.getBedWarsAPI().getSetupName(player), 6) != null) {
+                        if (block.equals(this.plugin.getBedWarsAPI().getBed(this.plugin.getBedWarsAPI().getSetupName(player), 6)))
+                        {
+                            player.sendMessage("§cYou have already chosen this bed!");
+                            event.setCancelled(true);
+                            return;
+                        }
+                    }
+                    if(this.plugin.getBedWarsAPI().getBed(this.plugin.getBedWarsAPI().getSetupName(player), 7) != null) {
+                        if (block.equals(this.plugin.getBedWarsAPI().getBed(this.plugin.getBedWarsAPI().getSetupName(player), 7)))
+                        {
+                            player.sendMessage("§cYou have already chosen this bed!");
+                            event.setCancelled(true);
+                            return;
+                        }
+                    }
+                    if(this.plugin.getBedWarsAPI().getBed(this.plugin.getBedWarsAPI().getSetupName(player), 8) != null) {
+                        if (block.equals(this.plugin.getBedWarsAPI().getBed(this.plugin.getBedWarsAPI().getSetupName(player), 8)))
+                        {
+                            player.sendMessage("§cYou have already chosen this bed!");
+                            event.setCancelled(true);
+                            return;
+                        }
+                    }
+
+                    if(this.plugin.getBedWarsAPI().getLastIndexOfBeds(player) == 0)
                     {
-                        this.plugin.getBedWarsAPI().setBed(player, (BlockBed) block, 1);
+                        this.plugin.getBedWarsAPI().setBed(player, (BlockBed) block, 1, "red");
                         player.sendMessage("§aThe bed was set!");
                         player.sendMessage("§a" + (this.plugin.getBedWarsAPI().getTeamNumber(this.plugin.getBedWarsAPI().getSetupName(player))-1) + " left!");
                     }
-                    else if(!this.plugin.getBedWarsAPI().checkIfExists(this.plugin.getBedWarsAPI().getSetupName(player)+"beds."+2))
+                    else if(this.plugin.getBedWarsAPI().getLastIndexOfBeds(player) == 1)
                     {
-                        this.plugin.getBedWarsAPI().setBed(player, (BlockBed) block, 2);
+                        this.plugin.getBedWarsAPI().setBed(player, (BlockBed) block, 2, "blue");
                         player.sendMessage("§aThe bed was set!");
+                        if(2 == this.plugin.getBedWarsAPI().getTeamNumber(this.plugin.getBedWarsAPI().getSetupName(player)))
+                        {
+                            player.sendMessage("§aYou have successfully set all beds!");
+                            event.setCancelled(true);
+                            return;
+                        }
                         player.sendMessage("§a" + (this.plugin.getBedWarsAPI().getTeamNumber(this.plugin.getBedWarsAPI().getSetupName(player))-2) + " left!");
                     }
-                    else if(!this.plugin.getBedWarsAPI().checkIfExists(this.plugin.getBedWarsAPI().getSetupName(player)+"beds."+3))
+                    else if(this.plugin.getBedWarsAPI().getLastIndexOfBeds(player) == 2)
                     {
-                        this.plugin.getBedWarsAPI().setBed(player, (BlockBed) block, 3);
+                        this.plugin.getBedWarsAPI().setBed(player, (BlockBed) block, 3, "green");
                         player.sendMessage("§aThe bed was set!");
+                        if(3 == this.plugin.getBedWarsAPI().getTeamNumber(this.plugin.getBedWarsAPI().getSetupName(player)))
+                        {
+                            player.sendMessage("§aYou have successfully set all beds!");
+                            event.setCancelled(true);
+                            return;
+                        }
                         player.sendMessage("§a" + (this.plugin.getBedWarsAPI().getTeamNumber(this.plugin.getBedWarsAPI().getSetupName(player))-3) + " left!");
                     }
-                    else if(!this.plugin.getBedWarsAPI().checkIfExists(this.plugin.getBedWarsAPI().getSetupName(player)+"beds."+4))
+                    else if(this.plugin.getBedWarsAPI().getLastIndexOfBeds(player) == 3)
                     {
-                        this.plugin.getBedWarsAPI().setBed(player, (BlockBed) block, 4);
+                        this.plugin.getBedWarsAPI().setBed(player, (BlockBed) block, 4, "yellow");
                         player.sendMessage("§aThe bed was set!");
+                        if(4 == this.plugin.getBedWarsAPI().getTeamNumber(this.plugin.getBedWarsAPI().getSetupName(player)))
+                        {
+                            player.sendMessage("§aYou have successfully set all beds!");
+                            event.setCancelled(true);
+                            return;
+                        }
                         player.sendMessage("§a" + (this.plugin.getBedWarsAPI().getTeamNumber(this.plugin.getBedWarsAPI().getSetupName(player))-4) + " left!");
                     }
-                    else if(!this.plugin.getBedWarsAPI().checkIfExists(this.plugin.getBedWarsAPI().getSetupName(player)+"beds."+5))
+                    else if(this.plugin.getBedWarsAPI().getLastIndexOfBeds(player) == 4)
                     {
-                        this.plugin.getBedWarsAPI().setBed(player, (BlockBed) block, 5);
+                        this.plugin.getBedWarsAPI().setBed(player, (BlockBed) block, 5, "orange");
                         player.sendMessage("§aThe bed was set!");
+                        if(5 == this.plugin.getBedWarsAPI().getTeamNumber(this.plugin.getBedWarsAPI().getSetupName(player)))
+                        {
+                            player.sendMessage("§aYou have successfully set all beds!");
+                            event.setCancelled(true);
+                            return;
+                        }
                         player.sendMessage("§a" + (this.plugin.getBedWarsAPI().getTeamNumber(this.plugin.getBedWarsAPI().getSetupName(player))-5) + " left!");
                     }
-                    else if(!this.plugin.getBedWarsAPI().checkIfExists(this.plugin.getBedWarsAPI().getSetupName(player)+"beds."+6))
+                    else if(this.plugin.getBedWarsAPI().getLastIndexOfBeds(player) == 5)
                     {
-                        this.plugin.getBedWarsAPI().setBed(player, (BlockBed) block, 6);
+                        this.plugin.getBedWarsAPI().setBed(player, (BlockBed) block, 6, "purple");
                         player.sendMessage("§aThe bed was set!");
+                        if(6 == this.plugin.getBedWarsAPI().getTeamNumber(this.plugin.getBedWarsAPI().getSetupName(player)))
+                        {
+                            player.sendMessage("§aYou have successfully set all beds!");
+                            event.setCancelled(true);
+                            return;
+                        }
                         player.sendMessage("§a" + (this.plugin.getBedWarsAPI().getTeamNumber(this.plugin.getBedWarsAPI().getSetupName(player))-6) + " left!");
                     }
-                    else if(!this.plugin.getBedWarsAPI().checkIfExists(this.plugin.getBedWarsAPI().getSetupName(player)+"beds."+7))
+                    else if(this.plugin.getBedWarsAPI().getLastIndexOfBeds(player) == 6)
                     {
-                        this.plugin.getBedWarsAPI().setBed(player, (BlockBed) block, 7);
+                        this.plugin.getBedWarsAPI().setBed(player, (BlockBed) block, 7, "pink");
                         player.sendMessage("§aThe bed was set!");
+                        if(7 == this.plugin.getBedWarsAPI().getTeamNumber(this.plugin.getBedWarsAPI().getSetupName(player)))
+                        {
+                            player.sendMessage("§aYou have successfully set all beds!");
+                            event.setCancelled(true);
+                            return;
+                        }
                         player.sendMessage("§a" + (this.plugin.getBedWarsAPI().getTeamNumber(this.plugin.getBedWarsAPI().getSetupName(player))-7) + " left!");
                     }
-                    else if(!this.plugin.getBedWarsAPI().checkIfExists(this.plugin.getBedWarsAPI().getSetupName(player)+"beds."+8))
+                    else if(this.plugin.getBedWarsAPI().getLastIndexOfBeds(player) == 7)
                     {
-                        this.plugin.getBedWarsAPI().setBed(player, (BlockBed) block, 8);
+                        this.plugin.getBedWarsAPI().setBed(player, (BlockBed) block, 8, "lightblue");
                         player.sendMessage("§aThe bed was set!");
+                        if(8 == this.plugin.getBedWarsAPI().getTeamNumber(this.plugin.getBedWarsAPI().getSetupName(player)))
+                        {
+                            player.sendMessage("§aYou have successfully set all beds!");
+                            event.setCancelled(true);
+                            return;
+                        }
                         player.sendMessage("§a" + (this.plugin.getBedWarsAPI().getTeamNumber(this.plugin.getBedWarsAPI().getSetupName(player))-8) + " left!");
                     }
+                    else {
+                        player.sendMessage("§cFailed!");
+                    }
+                    event.setCancelled(true);
                 }
                 else {
                     player.sendMessage("§cYou have to choose a bed that is in the BedWars world you specified!");
                 }
             }
 
-            if(this.plugin.getBedWarsAPI().getSetupBed(player))
+            if(this.plugin.getBedWarsAPI().getSetupClaySpawner(player))
             {
-                if(block instanceof BlockBed && block.getLevel().equals(this.plugin.getBedWarsAPI().getWorld(this.plugin.getBedWarsAPI().getSetupName(player))))
+                if(block instanceof BlockClay && block.getLevel().equals(this.plugin.getBedWarsAPI().getWorld(this.plugin.getBedWarsAPI().getSetupName(player))))
                 {
-                    this.plugin.getBedWarsAPI().setBed(player, (BlockBed) block, 1);
+                    if(this.plugin.getBedWarsAPI().getClaySpawner(this.plugin.getBedWarsAPI().getSetupName(player), 1) != null) {
+                        if (block.equals(this.plugin.getBedWarsAPI().getClaySpawner(this.plugin.getBedWarsAPI().getSetupName(player), 1)))
+                        {
+                            player.sendMessage("§cYou have already chosen this block of clay!");
+                            event.setCancelled(true);
+                            return;
+                        }
+                    }
+                    if(this.plugin.getBedWarsAPI().getClaySpawner(this.plugin.getBedWarsAPI().getSetupName(player), 2) != null) {
+                        if (block.equals(this.plugin.getBedWarsAPI().getClaySpawner(this.plugin.getBedWarsAPI().getSetupName(player), 2)))
+                        {
+                            player.sendMessage("§cYou have already chosen this bed!");
+                            event.setCancelled(true);
+                            return;
+                        }
+                    }
+                    if(this.plugin.getBedWarsAPI().getClaySpawner(this.plugin.getBedWarsAPI().getSetupName(player), 3) != null) {
+                        if (block.equals(this.plugin.getBedWarsAPI().getClaySpawner(this.plugin.getBedWarsAPI().getSetupName(player), 3)))
+                        {
+                            player.sendMessage("§cYou have already chosen this block of clay!");
+                            event.setCancelled(true);
+                            return;
+                        }
+                    }
+                    if(this.plugin.getBedWarsAPI().getClaySpawner(this.plugin.getBedWarsAPI().getSetupName(player), 4) != null) {
+                        if (block.equals(this.plugin.getBedWarsAPI().getClaySpawner(this.plugin.getBedWarsAPI().getSetupName(player), 4)))
+                        {
+                            player.sendMessage("§cYou have already chosen this block of clay!");
+                            event.setCancelled(true);
+                            return;
+                        }
+                    }
+                    if(this.plugin.getBedWarsAPI().getClaySpawner(this.plugin.getBedWarsAPI().getSetupName(player), 5) != null) {
+                        if (block.equals(this.plugin.getBedWarsAPI().getClaySpawner(this.plugin.getBedWarsAPI().getSetupName(player), 5)))
+                        {
+                            player.sendMessage("§cYou have already chosen this block of clay!");
+                            event.setCancelled(true);
+                            return;
+                        }
+                    }
+                    if(this.plugin.getBedWarsAPI().getClaySpawner(this.plugin.getBedWarsAPI().getSetupName(player), 6) != null) {
+                        if (block.equals(this.plugin.getBedWarsAPI().getClaySpawner(this.plugin.getBedWarsAPI().getSetupName(player), 6)))
+                        {
+                            player.sendMessage("§cYou have already chosen this block of clay!");
+                            event.setCancelled(true);
+                            return;
+                        }
+                    }
+                    if(this.plugin.getBedWarsAPI().getClaySpawner(this.plugin.getBedWarsAPI().getSetupName(player), 7) != null) {
+                        if (block.equals(this.plugin.getBedWarsAPI().getClaySpawner(this.plugin.getBedWarsAPI().getSetupName(player), 7)))
+                        {
+                            player.sendMessage("§cYou have already chosen this block of clay!");
+                            event.setCancelled(true);
+                            return;
+                        }
+                    }
+                    if(this.plugin.getBedWarsAPI().getClaySpawner(this.plugin.getBedWarsAPI().getSetupName(player), 8) != null) {
+                        if (block.equals(this.plugin.getBedWarsAPI().getClaySpawner(this.plugin.getBedWarsAPI().getSetupName(player), 8)))
+                        {
+                            player.sendMessage("§cYou have already chosen this block of clay!");
+                            event.setCancelled(true);
+                            return;
+                        }
+                    }
+
+                    if(this.plugin.getBedWarsAPI().getLastIndexOfClaySpawner(player) == 0)
+                    {
+                        this.plugin.getBedWarsAPI().setClaySpawner(player, (BlockClay) block, 1);
+                        player.sendMessage("§aThe clay spawner was set!");
+                        player.sendMessage("§a" + (this.plugin.getBedWarsAPI().getTeamNumber(this.plugin.getBedWarsAPI().getSetupName(player))-1) + " left!");
+                    }
+                    else if(this.plugin.getBedWarsAPI().getLastIndexOfClaySpawner(player) == 1)
+                    {
+                        this.plugin.getBedWarsAPI().setClaySpawner(player, (BlockClay) block, 2);
+                        player.sendMessage("§aThe clay spawner was set!");
+                        if(2 == this.plugin.getBedWarsAPI().getTeamNumber(this.plugin.getBedWarsAPI().getSetupName(player)))
+                        {
+                            player.sendMessage("§aYou have successfully set all clay spawners!");
+                            event.setCancelled(true);
+                            return;
+                        }
+                        player.sendMessage("§a" + (this.plugin.getBedWarsAPI().getTeamNumber(this.plugin.getBedWarsAPI().getSetupName(player))-2) + " left!");
+                    }
+                    else if(this.plugin.getBedWarsAPI().getLastIndexOfClaySpawner(player) == 2)
+                    {
+                        this.plugin.getBedWarsAPI().setClaySpawner(player, (BlockClay) block, 3);
+                        player.sendMessage("§aThe clay spawner was set!");
+                        if(3 == this.plugin.getBedWarsAPI().getTeamNumber(this.plugin.getBedWarsAPI().getSetupName(player)))
+                        {
+                            player.sendMessage("§aYou have successfully set all clay spawners!");
+                            event.setCancelled(true);
+                            return;
+                        }
+                        player.sendMessage("§a" + (this.plugin.getBedWarsAPI().getTeamNumber(this.plugin.getBedWarsAPI().getSetupName(player))-3) + " left!");
+                    }
+                    else if(this.plugin.getBedWarsAPI().getLastIndexOfClaySpawner(player) == 3)
+                    {
+                        this.plugin.getBedWarsAPI().setClaySpawner(player, (BlockClay) block, 4);
+                        player.sendMessage("§aThe clay spawner was set!");
+                        if(4 == this.plugin.getBedWarsAPI().getTeamNumber(this.plugin.getBedWarsAPI().getSetupName(player)))
+                        {
+                            player.sendMessage("§aYou have successfully set all clay spawners!");
+                            event.setCancelled(true);
+                            return;
+                        }
+                        player.sendMessage("§a" + (this.plugin.getBedWarsAPI().getTeamNumber(this.plugin.getBedWarsAPI().getSetupName(player))-4) + " left!");
+                    }
+                    else if(this.plugin.getBedWarsAPI().getLastIndexOfClaySpawner(player) == 4)
+                    {
+                        this.plugin.getBedWarsAPI().setClaySpawner(player, (BlockClay) block, 5);
+                        player.sendMessage("§aThe clay spawner was set!");
+                        if(5 == this.plugin.getBedWarsAPI().getTeamNumber(this.plugin.getBedWarsAPI().getSetupName(player)))
+                        {
+                            player.sendMessage("§aYou have successfully set all clay spawners!");
+                            event.setCancelled(true);
+                            return;
+                        }
+                        player.sendMessage("§a" + (this.plugin.getBedWarsAPI().getTeamNumber(this.plugin.getBedWarsAPI().getSetupName(player))-5) + " left!");
+                    }
+                    else if(this.plugin.getBedWarsAPI().getLastIndexOfClaySpawner(player) == 5)
+                    {
+                        this.plugin.getBedWarsAPI().setClaySpawner(player, (BlockClay) block, 6);
+                        player.sendMessage("§aThe clay spawner was set!");
+                        if(6 == this.plugin.getBedWarsAPI().getTeamNumber(this.plugin.getBedWarsAPI().getSetupName(player)))
+                        {
+                            player.sendMessage("§aYou have successfully set all clay spawners!");
+                            event.setCancelled(true);
+                            return;
+                        }
+                        player.sendMessage("§a" + (this.plugin.getBedWarsAPI().getTeamNumber(this.plugin.getBedWarsAPI().getSetupName(player))-6) + " left!");
+                    }
+                    else if(this.plugin.getBedWarsAPI().getLastIndexOfClaySpawner(player) == 6)
+                    {
+                        this.plugin.getBedWarsAPI().setClaySpawner(player, (BlockClay) block, 7);
+                        player.sendMessage("§aThe clay spawner was set!");
+                        if(7 == this.plugin.getBedWarsAPI().getTeamNumber(this.plugin.getBedWarsAPI().getSetupName(player)))
+                        {
+                            player.sendMessage("§aYou have successfully set all clay spawners!");
+                            event.setCancelled(true);
+                            return;
+                        }
+                        player.sendMessage("§a" + (this.plugin.getBedWarsAPI().getTeamNumber(this.plugin.getBedWarsAPI().getSetupName(player))-7) + " left!");
+                    }
+                    else if(this.plugin.getBedWarsAPI().getLastIndexOfClaySpawner(player) == 7)
+                    {
+                        this.plugin.getBedWarsAPI().setClaySpawner(player, (BlockClay) block, 8);
+                        player.sendMessage("§aThe clay spawner was set!");
+                        if(8 == this.plugin.getBedWarsAPI().getTeamNumber(this.plugin.getBedWarsAPI().getSetupName(player)))
+                        {
+                            player.sendMessage("§aYou have successfully set all clay spawners!");
+                            event.setCancelled(true);
+                            return;
+                        }
+                        player.sendMessage("§a" + (this.plugin.getBedWarsAPI().getTeamNumber(this.plugin.getBedWarsAPI().getSetupName(player))-8) + " left!");
+                    }
+                    else {
+                        player.sendMessage("§cFailed!");
+                    }
+                    event.setCancelled(true);
                 }
                 else {
                     player.sendMessage("§cYou have to choose a bed that is in the BedWars world you specified!");

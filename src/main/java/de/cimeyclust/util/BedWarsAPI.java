@@ -54,9 +54,32 @@ public class BedWarsAPI
         return this.config.getInt("bedwars."+name+".playerPerTeam");
     }
 
-    public List<Integer> getBeds(String name)
+    public BlockBed getBed(String name, int index)
     {
-        return this.config.getIntegerList("bedwars."+name+".beds");
+        if(this.config.exists("bedwars."+name+".beds."+index)) {
+            int x = this.config.getInt("bedwars." + name + ".beds.team" + index + ".bedX");
+            int y = this.config.getInt("bedwars." + name + ".beds.team" + index + ".bedY");
+            int z = this.config.getInt("bedwars." + name + ".beds.team" + index + ".bedZ");
+            return (BlockBed) this.getWorld(name).getBlock(x, y, z);
+        }
+        else
+        {
+            return null;
+        }
+    }
+
+    public BlockClay getClaySpawner(String name, int index)
+    {
+        if(this.config.exists("bedwars."+name+".claySpawners."+index)) {
+            int x = this.config.getInt("bedwars." + name + ".claySpawners.claySpawner" + index + ".spawnerX");
+            int y = this.config.getInt("bedwars." + name + ".claySpawners.claySpawner" + index + ".spawnerY");
+            int z = this.config.getInt("bedwars." + name + ".claySpawners.claySpawner" + index + ".spawnerZ");
+            return (BlockClay) this.getWorld(name).getBlock(x, y, z);
+        }
+        else
+        {
+            return null;
+        }
     }
 
     // Setup
@@ -75,6 +98,16 @@ public class BedWarsAPI
     public Boolean getSetupExists(Player player)
     {
         return this.config.exists("bedwars."+this.getSetupName(player)+".setup");
+    }
+
+    public Integer getLastIndexOfBeds(Player player)
+    {
+        return this.config.getInt("bedwars."+this.plugin.getBedWarsAPI().getSetupName(player)+".beds.lastIndex");
+    }
+
+    public Integer getLastIndexOfClaySpawner(Player player)
+    {
+        return this.config.getInt("bedwars."+this.plugin.getBedWarsAPI().getSetupName(player)+".claySpawners.lastIndex");
     }
 
     public String getSetupName(Player player)
@@ -100,6 +133,11 @@ public class BedWarsAPI
     public Boolean getSetupBed(Player player)
     {
         return this.config.getBoolean("bedwars.setup."+player.getName()+".beds");
+    }
+
+    public Boolean getSetupClaySpawner(Player player)
+    {
+        return this.config.getBoolean("bedwars.setup."+player.getName()+".claySpawner");
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -183,15 +221,19 @@ public class BedWarsAPI
         this.config.save(this.file);
     }
 
-    public void setBed(Player player, BlockBed blockBed, int index)
+    public void setBed(Player player, BlockBed blockBed, int index, String teamColor)
     {
-        this.config.set("bedwars."+this.getSetupName(player)+".beds."+index+".bedX", blockBed.getX());
-        this.config.set("bedwars."+this.getSetupName(player)+".beds."+index+".bedY", blockBed.getY());
-        this.config.set("bedwars."+this.getSetupName(player)+".beds."+index+".bedZ", blockBed.getZ());
+        this.config.set("bedwars."+this.getSetupName(player)+".beds.lastIndex", index);
+        this.config.save(this.file);
+        this.config.set("bedwars."+this.getSetupName(player)+".beds.team"+index+".bedX", blockBed.getX());
+        this.config.set("bedwars."+this.getSetupName(player)+".beds.team"+index+".bedY", blockBed.getY());
+        this.config.set("bedwars."+this.getSetupName(player)+".beds.team"+index+".bedZ", blockBed.getZ());
+        this.config.set("bedwars."+this.getSetupName(player)+".beds.team"+index+".teamColor", teamColor);
         if(index == this.getTeamNumber(this.getSetupName(player)))
         {
             this.config.set("bedwars.setup."+player.getName()+".beds", false);
             player.sendMessage("§aFor each team, hit a block of clay with the left or right mouse button to add them as clay spawner.");
+            this.setupClaySpawner(player);
         }
 
         this.config.save(this.file);
@@ -207,9 +249,9 @@ public class BedWarsAPI
 
     public void setClaySpawner(Player player, BlockClay blockClay, int index)
     {
-        this.config.set("bedwars."+this.getSetupName(player)+".claySpawners."+index+".bedX", blockClay.getX());
-        this.config.set("bedwars."+this.getSetupName(player)+".claySpawners."+index+".bedY", blockClay.getY());
-        this.config.set("bedwars."+this.getSetupName(player)+".claySpawners."+index+".bedZ", blockClay.getZ());
+        this.config.set("bedwars."+this.getSetupName(player)+".claySpawners.claySpawner"+index+".spawnerX", blockClay.getX());
+        this.config.set("bedwars."+this.getSetupName(player)+".claySpawners.claySpawner"+index+".spawnerY", blockClay.getY());
+        this.config.set("bedwars."+this.getSetupName(player)+".claySpawners.claySpawner"+index+".spawnerZ", blockClay.getZ());
         if(index == this.getTeamNumber(this.getSetupName(player)))
         {
             this.config.set("bedwars.setup."+player.getName()+".claySpawner", false);
