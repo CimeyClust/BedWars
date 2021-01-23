@@ -223,13 +223,12 @@ public class BedWarsAPI
 
     public void setupCancel(Player player)
     {
-        ConfigSection section = this.config.getSection("bedwars.setup");
-        section.remove(player.getName());
-        section = this.config.getSection("bedwars");
-        section.remove(this.getSetupName(player));
+        this.config.getSection("bedwars").remove(this.getSetupName(player));
         List<String> names = this.getNames();
         names.remove(this.getSetupName(player));
         this.config.set("names", names);
+        ConfigSection section = this.config.getSection("bedwars.setup");
+        section.remove(player.getName());
 
         this.config.save(this.file);
     }

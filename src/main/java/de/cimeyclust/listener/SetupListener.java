@@ -119,49 +119,49 @@ public class SetupListener implements Listener
             {
                 if(block instanceof BlockBed && block.getLevel().equals(this.plugin.getBedWarsAPI().getWorld(this.plugin.getBedWarsAPI().getSetupName(player))))
                 {
-                    if(!this.plugin.getBedWarsAPI().checkIfExists(this.plugin.getBedWarsAPI().getSetupName(player)+"beds.1"))
+                    if(!this.plugin.getBedWarsAPI().checkIfExists(this.plugin.getBedWarsAPI().getSetupName(player)+"beds."+1))
                     {
                         this.plugin.getBedWarsAPI().setBed(player, (BlockBed) block, 1);
                         player.sendMessage("§aThe bed was set!");
                         player.sendMessage("§a" + (this.plugin.getBedWarsAPI().getTeamNumber(this.plugin.getBedWarsAPI().getSetupName(player))-1) + " left!");
                     }
-                    else if(!this.plugin.getBedWarsAPI().checkIfExists(this.plugin.getBedWarsAPI().getSetupName(player)+"beds.2"))
+                    else if(!this.plugin.getBedWarsAPI().checkIfExists(this.plugin.getBedWarsAPI().getSetupName(player)+"beds."+2))
                     {
                         this.plugin.getBedWarsAPI().setBed(player, (BlockBed) block, 2);
                         player.sendMessage("§aThe bed was set!");
                         player.sendMessage("§a" + (this.plugin.getBedWarsAPI().getTeamNumber(this.plugin.getBedWarsAPI().getSetupName(player))-2) + " left!");
                     }
-                    else if(!this.plugin.getBedWarsAPI().checkIfExists(this.plugin.getBedWarsAPI().getSetupName(player)+"beds.3"))
+                    else if(!this.plugin.getBedWarsAPI().checkIfExists(this.plugin.getBedWarsAPI().getSetupName(player)+"beds."+3))
                     {
                         this.plugin.getBedWarsAPI().setBed(player, (BlockBed) block, 3);
                         player.sendMessage("§aThe bed was set!");
                         player.sendMessage("§a" + (this.plugin.getBedWarsAPI().getTeamNumber(this.plugin.getBedWarsAPI().getSetupName(player))-3) + " left!");
                     }
-                    else if(!this.plugin.getBedWarsAPI().checkIfExists(this.plugin.getBedWarsAPI().getSetupName(player)+"beds.4"))
+                    else if(!this.plugin.getBedWarsAPI().checkIfExists(this.plugin.getBedWarsAPI().getSetupName(player)+"beds."+4))
                     {
                         this.plugin.getBedWarsAPI().setBed(player, (BlockBed) block, 4);
                         player.sendMessage("§aThe bed was set!");
                         player.sendMessage("§a" + (this.plugin.getBedWarsAPI().getTeamNumber(this.plugin.getBedWarsAPI().getSetupName(player))-4) + " left!");
                     }
-                    else if(!this.plugin.getBedWarsAPI().checkIfExists(this.plugin.getBedWarsAPI().getSetupName(player)+"beds.5"))
+                    else if(!this.plugin.getBedWarsAPI().checkIfExists(this.plugin.getBedWarsAPI().getSetupName(player)+"beds."+5))
                     {
                         this.plugin.getBedWarsAPI().setBed(player, (BlockBed) block, 5);
                         player.sendMessage("§aThe bed was set!");
                         player.sendMessage("§a" + (this.plugin.getBedWarsAPI().getTeamNumber(this.plugin.getBedWarsAPI().getSetupName(player))-5) + " left!");
                     }
-                    else if(!this.plugin.getBedWarsAPI().checkIfExists(this.plugin.getBedWarsAPI().getSetupName(player)+"beds.6"))
+                    else if(!this.plugin.getBedWarsAPI().checkIfExists(this.plugin.getBedWarsAPI().getSetupName(player)+"beds."+6))
                     {
                         this.plugin.getBedWarsAPI().setBed(player, (BlockBed) block, 6);
                         player.sendMessage("§aThe bed was set!");
                         player.sendMessage("§a" + (this.plugin.getBedWarsAPI().getTeamNumber(this.plugin.getBedWarsAPI().getSetupName(player))-6) + " left!");
                     }
-                    else if(!this.plugin.getBedWarsAPI().checkIfExists(this.plugin.getBedWarsAPI().getSetupName(player)+"beds.7"))
+                    else if(!this.plugin.getBedWarsAPI().checkIfExists(this.plugin.getBedWarsAPI().getSetupName(player)+"beds."+7))
                     {
                         this.plugin.getBedWarsAPI().setBed(player, (BlockBed) block, 7);
                         player.sendMessage("§aThe bed was set!");
                         player.sendMessage("§a" + (this.plugin.getBedWarsAPI().getTeamNumber(this.plugin.getBedWarsAPI().getSetupName(player))-7) + " left!");
                     }
-                    else if(!this.plugin.getBedWarsAPI().checkIfExists(this.plugin.getBedWarsAPI().getSetupName(player)+"beds.8"))
+                    else if(!this.plugin.getBedWarsAPI().checkIfExists(this.plugin.getBedWarsAPI().getSetupName(player)+"beds."+8))
                     {
                         this.plugin.getBedWarsAPI().setBed(player, (BlockBed) block, 8);
                         player.sendMessage("§aThe bed was set!");
