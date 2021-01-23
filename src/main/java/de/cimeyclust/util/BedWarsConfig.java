@@ -24,7 +24,7 @@ public class BedWarsConfig
 
     public void addDefault()
     {
-        if(!this.file.exists())
+        if(!this.config.exists("config"))
         {
             this.config.set("config.backupFunction", true);
             this.config.set("config.round.duration", 300);

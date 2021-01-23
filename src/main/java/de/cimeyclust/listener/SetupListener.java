@@ -2,9 +2,14 @@ package de.cimeyclust.listener;
 
 
 import cn.nukkit.Player;
+import cn.nukkit.block.Block;
+import cn.nukkit.block.BlockBed;
 import cn.nukkit.event.EventHandler;
 import cn.nukkit.event.Listener;
 import cn.nukkit.event.player.PlayerChatEvent;
+import cn.nukkit.event.player.PlayerInteractEvent;
+import cn.nukkit.event.player.PlayerMessageEvent;
+import cn.nukkit.event.player.PlayerQuitEvent;
 import cn.nukkit.level.Level;
 import de.cimeyclust.BedWars;
 
@@ -22,10 +27,11 @@ public class SetupListener implements Listener
         Player player = event.getPlayer();
         String message = event.getMessage();
 
-        if(this.plugin.getBedWarsAPI().getSetupWorld())
+        if(this.plugin.getBedWarsAPI().getSetupWorld(player))
         {
             if(message.equals("cancel"))
             {
+                this.plugin.getBedWarsAPI().setupCancel(player);
                 player.sendMessage("§cSetup was canceled successfully!");
                 event.setCancelled(true);
                 return;
@@ -35,34 +41,157 @@ public class SetupListener implements Listener
             {
                 if(level.getName().equals(message))
                 {
-                    this.plugin.getBedWarsAPI().setWorld(level);
+                    this.plugin.getBedWarsAPI().setWorld(player, level);
                     player.sendMessage("§aThis map was solidified in the world "+level.getName()+".");
-                    player.sendMessage("§aType in how many teams should there ever be a game?");
+                    player.sendMessage("§aType in how many teams should there ever be a game. (minimum 2, maximum 8)");
                     event.setCancelled(true);
                     return;
                 }
             }
             player.sendMessage("§cThe world with the given name was not found; Cancellation!");
             event.setCancelled(true);
+            this.plugin.getBedWarsAPI().setupCancel(player);
             return;
         }
-        else if(this.plugin.getBedWarsAPI().getSetupTeamNumber())
+        else if(this.plugin.getBedWarsAPI().getSetupTeamNumber(player))
         {
             if(message.equals("cancel"))
             {
+                this.plugin.getBedWarsAPI().setupCancel(player);
                 player.sendMessage("§cSetup was canceled successfully!");
                 event.setCancelled(true);
                 return;
             }
 
-            if(this.plugin.getFunctions().isNumeric(message))
+            if(this.plugin.getFunctions().isNumeric(message) && Integer.parseInt(message) >= 2 && Integer.parseInt(message) <= 8)
             {
-
+                this.plugin.getBedWarsAPI().setTeamNumber(player, Integer.parseInt(message));
+                event.setCancelled(true);
+                player.sendMessage("§aType in how many players should be in one team. (minimum 1, maximum 8)");
+                return;
             }
             else
             {
-                player.sendMessage("§cYou have to enter a whole positive number!");
+                player.sendMessage("§cYou have to enter a whole positive number, greater than 0; Cancellation!");
+                event.setCancelled(true);
+                this.plugin.getBedWarsAPI().setupCancel(player);
+                return;
             }
+        }
+        else if(this.plugin.getBedWarsAPI().getSetupPlayerPerTeam(player))
+        {
+            if(message.equals("cancel"))
+            {
+                this.plugin.getBedWarsAPI().setupCancel(player);
+                player.sendMessage("§cSetup was canceled successfully!");
+                event.setCancelled(true);
+                return;
+            }
+
+            if(this.plugin.getFunctions().isNumeric(message) && Integer.parseInt(message) >= 1 && Integer.parseInt(message) <= 8)
+            {
+                this.plugin.getBedWarsAPI().setPlayerPerTeam(player, Integer.parseInt(message));
+                event.setCancelled(true);
+                player.sendMessage("§aFor each team, hit a bed with the left or right mouse button to add them.");
+                this.plugin.getBedWarsAPI().setupBed(player);
+                player.sendMessage("§a"+this.plugin.getBedWarsAPI().getTeamNumber(this.plugin.getBedWarsAPI().getSetupName(player))+" left!");
+                return;
+            }
+            else
+            {
+                player.sendMessage("§cYou have to enter a whole positive number, greater than 0; Cancellation!");
+                event.setCancelled(true);
+                this.plugin.getBedWarsAPI().setupCancel(player);
+                return;
+            }
+        }
+    }
+
+    @EventHandler
+    public void onPlayerInteractWithBlock(PlayerInteractEvent event)
+    {
+        Player player = event.getPlayer();
+        Block block = event.getBlock();
+
+        if(event.getAction().equals(PlayerInteractEvent.Action.LEFT_CLICK_BLOCK) || event.getAction().equals(PlayerInteractEvent.Action.RIGHT_CLICK_BLOCK))
+        {
+            if(this.plugin.getBedWarsAPI().getSetupBed(player))
+            {
+                if(block instanceof BlockBed && block.getLevel().equals(this.plugin.getBedWarsAPI().getWorld(this.plugin.getBedWarsAPI().getSetupName(player))))
+                {
+                    if(!this.plugin.getBedWarsAPI().checkIfExists(this.plugin.getBedWarsAPI().getSetupName(player)+"beds.1"))
+                    {
+                        this.plugin.getBedWarsAPI().setBed(player, (BlockBed) block, 1);
+                        player.sendMessage("§aThe bed was set!");
+                        player.sendMessage("§a" + (this.plugin.getBedWarsAPI().getTeamNumber(this.plugin.getBedWarsAPI().getSetupName(player))-1) + " left!");
+                    }
+                    else if(!this.plugin.getBedWarsAPI().checkIfExists(this.plugin.getBedWarsAPI().getSetupName(player)+"beds.2"))
+                    {
+                        this.plugin.getBedWarsAPI().setBed(player, (BlockBed) block, 2);
+                        player.sendMessage("§aThe bed was set!");
+                        player.sendMessage("§a" + (this.plugin.getBedWarsAPI().getTeamNumber(this.plugin.getBedWarsAPI().getSetupName(player))-2) + " left!");
+                    }
+                    else if(!this.plugin.getBedWarsAPI().checkIfExists(this.plugin.getBedWarsAPI().getSetupName(player)+"beds.3"))
+                    {
+                        this.plugin.getBedWarsAPI().setBed(player, (BlockBed) block, 3);
+                        player.sendMessage("§aThe bed was set!");
+                        player.sendMessage("§a" + (this.plugin.getBedWarsAPI().getTeamNumber(this.plugin.getBedWarsAPI().getSetupName(player))-3) + " left!");
+                    }
+                    else if(!this.plugin.getBedWarsAPI().checkIfExists(this.plugin.getBedWarsAPI().getSetupName(player)+"beds.4"))
+                    {
+                        this.plugin.getBedWarsAPI().setBed(player, (BlockBed) block, 4);
+                        player.sendMessage("§aThe bed was set!");
+                        player.sendMessage("§a" + (this.plugin.getBedWarsAPI().getTeamNumber(this.plugin.getBedWarsAPI().getSetupName(player))-4) + " left!");
+                    }
+                    else if(!this.plugin.getBedWarsAPI().checkIfExists(this.plugin.getBedWarsAPI().getSetupName(player)+"beds.5"))
+                    {
+                        this.plugin.getBedWarsAPI().setBed(player, (BlockBed) block, 5);
+                        player.sendMessage("§aThe bed was set!");
+                        player.sendMessage("§a" + (this.plugin.getBedWarsAPI().getTeamNumber(this.plugin.getBedWarsAPI().getSetupName(player))-5) + " left!");
+                    }
+                    else if(!this.plugin.getBedWarsAPI().checkIfExists(this.plugin.getBedWarsAPI().getSetupName(player)+"beds.6"))
+                    {
+                        this.plugin.getBedWarsAPI().setBed(player, (BlockBed) block, 6);
+                        player.sendMessage("§aThe bed was set!");
+                        player.sendMessage("§a" + (this.plugin.getBedWarsAPI().getTeamNumber(this.plugin.getBedWarsAPI().getSetupName(player))-6) + " left!");
+                    }
+                    else if(!this.plugin.getBedWarsAPI().checkIfExists(this.plugin.getBedWarsAPI().getSetupName(player)+"beds.7"))
+                    {
+                        this.plugin.getBedWarsAPI().setBed(player, (BlockBed) block, 7);
+                        player.sendMessage("§aThe bed was set!");
+                        player.sendMessage("§a" + (this.plugin.getBedWarsAPI().getTeamNumber(this.plugin.getBedWarsAPI().getSetupName(player))-7) + " left!");
+                    }
+                    else if(!this.plugin.getBedWarsAPI().checkIfExists(this.plugin.getBedWarsAPI().getSetupName(player)+"beds.8"))
+                    {
+                        this.plugin.getBedWarsAPI().setBed(player, (BlockBed) block, 8);
+                        player.sendMessage("§aThe bed was set!");
+                        player.sendMessage("§a" + (this.plugin.getBedWarsAPI().getTeamNumber(this.plugin.getBedWarsAPI().getSetupName(player))-8) + " left!");
+                    }
+                }
+                else {
+                    player.sendMessage("§cYou have to choose a bed that is in the BedWars world you specified!");
+                }
+            }
+
+            if(this.plugin.getBedWarsAPI().getSetupBed(player))
+            {
+                if(block instanceof BlockBed && block.getLevel().equals(this.plugin.getBedWarsAPI().getWorld(this.plugin.getBedWarsAPI().getSetupName(player))))
+                {
+                    this.plugin.getBedWarsAPI().setBed(player, (BlockBed) block, 1);
+                }
+                else {
+                    player.sendMessage("§cYou have to choose a bed that is in the BedWars world you specified!");
+                }
+            }
+        }
+    }
+
+    @EventHandler
+    public void onPlayerLeaveCancelSetup(PlayerQuitEvent event)
+    {
+        if(this.plugin.getBedWarsAPI().getSetupExists(event.getPlayer()))
+        {
+            this.plugin.getBedWarsAPI().setupCancel(event.getPlayer());
         }
     }
 }

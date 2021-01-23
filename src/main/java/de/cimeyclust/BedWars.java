@@ -6,6 +6,7 @@ import cn.nukkit.plugin.PluginManager;
 import cn.nukkit.plugin.service.RegisteredServiceProvider;
 import com.nukkitx.fakeinventories.inventory.FakeInventories;
 import de.cimeyclust.commands.BedWarsMainCommand;
+import de.cimeyclust.listener.SetupListener;
 import de.cimeyclust.util.BedWarsAPI;
 import de.cimeyclust.util.BedWarsConfig;
 import de.cimeyclust.util.Functions;
@@ -31,6 +32,8 @@ public class BedWars extends PluginBase
         this.bedWarsConfig = new BedWarsConfig(this);
         this.functions = new Functions(this);
 
+        this.getBedWarsAPI().addDefault();
+        this.getBedWarsConfig().addDefault();
 
         this.registerCommand();
         this.registerListener();
@@ -40,6 +43,7 @@ public class BedWars extends PluginBase
     @Override
     public void onDisable()
     {
+        this.getBedWarsAPI().removeSetup();
         getLogger().info("§cThe BedWars plugin has been deactivated successfully!");
     }
 
@@ -47,14 +51,14 @@ public class BedWars extends PluginBase
     {
         SimpleCommandMap commandMap = this.getServer().getCommandMap();
 
-        commandMap.register("help", new BedWarsMainCommand("bedwars", "BedWars-Plugin Main-Command", "§c/bedwars", new String[]{"bw"}, this));
+        commandMap.register("help", new BedWarsMainCommand("bedwars", "BedWars-Plugin Main-Command", "§c/bedwars <setup>", new String[]{"bw"}, this));
     }
 
     private void registerListener()
     {
         PluginManager manager = this.getServer().getPluginManager();
 
-        // manager.registerEvents(new PlayerActionListener(this), this);
+        manager.registerEvents(new SetupListener(this), this);
     }
 
     public BedWarsAPI getBedWarsAPI()
