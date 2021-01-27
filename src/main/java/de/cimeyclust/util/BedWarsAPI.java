@@ -223,7 +223,7 @@ public class BedWarsAPI
 
     public Boolean getSetupJoinSign(Player player)
     {
-        return this.config.getBoolean("bedwars.setup."+player.getName()+".joinsign");
+        return this.config.getBoolean("bedwars.setup."+player.getName()+".joinSign");
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -428,7 +428,6 @@ public class BedWarsAPI
 
     public void setJoinSign(Player player, BlockSignPost block)
     {
-
         this.config.save(this.file);
         this.config.set("bedwars."+this.getSetupName(player)+".joinSignX", block.getX());
         this.config.set("bedwars."+this.getSetupName(player)+".joinSignY", block.getY());
@@ -437,6 +436,8 @@ public class BedWarsAPI
 
         ConfigSection section = this.config.getSection("bedwars."+this.getSetupName(player));
         section.remove("setupPlayer");
+        ConfigSection section1 = this.config.getSection("bedwars.setup");
+        section1.remove(player.getName());
         this.config.set("bedwars."+this.getSetupName(player)+".setup", false);
 
         BlockEntitySign blockEntity = (BlockEntitySign) block.getLevel().getBlockEntity(block.getLocation());
@@ -507,8 +508,8 @@ public class BedWarsAPI
             {
                 text[1] = "§98 Teams";
             }
-            text[4] = "[§0"+this.getSetupName(player)+"§f]";
-            text[2] = "§a0 / 0";
+            text[3] = "§f[§0"+this.getSetupName(player)+"§f]";
+            text[2] = "§a0 / "+(this.getPlayerPerTeam(this.getSetupName(player))*this.getTeamNumber(this.getSetupName(player)));
             blockEntity.setText(text);
             player.sendMessage("§aSetup done!");
         }
@@ -521,7 +522,9 @@ public class BedWarsAPI
 
     public void setupCancel(Player player)
     {
-        this.config.getSection("bedwars").remove(this.getSetupName(player));
+        if(this.isSetup(this.getSetupName(player))) {
+            this.config.getSection("bedwars").remove(this.getSetupName(player));
+        }
         List<String> names = this.getNames();
         names.remove(this.getSetupName(player));
         this.config.set("names", names);

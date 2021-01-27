@@ -1033,14 +1033,15 @@ public class SetupListener implements Listener
                 }
             }
 
-            if(this.plugin.getBedWarsAPI().getSetupJoinSign(player))
+            else if(this.plugin.getBedWarsAPI().getSetupJoinSign(player))
             {
-                if(block instanceof BlockSignPost)
+                if(block.getLevel().getBlockEntity(block.getLocation()) instanceof BlockEntitySign && !block.getLevel().equals(this.plugin.getBedWarsAPI().getWorld(this.plugin.getBedWarsAPI().getSetupName(player))))
                 {
                     this.plugin.getBedWarsAPI().setJoinSign(player, (BlockSignPost) block);
+                    player.sendMessage("Succesfully!");
                 }
                 else {
-                    player.sendMessage("§cYou have to choose a sign!");
+                    player.sendMessage("§cYou have to choose a sign in another world as the BedWars map is!");
                 }
             }
         }

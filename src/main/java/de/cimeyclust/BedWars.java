@@ -6,6 +6,7 @@ import cn.nukkit.plugin.PluginManager;
 import cn.nukkit.plugin.service.RegisteredServiceProvider;
 import com.nukkitx.fakeinventories.inventory.FakeInventories;
 import de.cimeyclust.commands.BedWarsMainCommand;
+import de.cimeyclust.listener.RoundListener;
 import de.cimeyclust.listener.SetupListener;
 import de.cimeyclust.util.BedWarsAPI;
 import de.cimeyclust.util.BedWarsConfig;
@@ -59,6 +60,7 @@ public class BedWars extends PluginBase
         PluginManager manager = this.getServer().getPluginManager();
 
         manager.registerEvents(new SetupListener(this), this);
+        manager.registerEvents(new RoundListener(this), this);
     }
 
     public BedWarsAPI getBedWarsAPI()
