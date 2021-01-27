@@ -2,16 +2,19 @@ package de.cimeyclust.util;
 
 import cn.nukkit.Player;
 import cn.nukkit.block.*;
+import cn.nukkit.blockentity.BlockEntitySign;
+import cn.nukkit.entity.Entity;
+import cn.nukkit.entity.EntityCreature;
+import cn.nukkit.entity.passive.EntityVillager;
 import cn.nukkit.level.Level;
 import cn.nukkit.level.Location;
+import cn.nukkit.math.Vector3;
 import cn.nukkit.utils.Config;
 import cn.nukkit.utils.ConfigSection;
 import de.cimeyclust.BedWars;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Dictionary;
-import java.util.List;
+import java.util.*;
 
 public class BedWarsAPI
 {
@@ -108,6 +111,28 @@ public class BedWarsAPI
         }
     }
 
+    public Block getItemSeller(String name, int index)
+    {
+        if(this.config.exists("bedwars."+name+".sellers."+index)) {
+            int x = this.config.getInt("bedwars." + name + ".sellers.seller" + index + ".sellerX");
+            int y = this.config.getInt("bedwars." + name + ".sellers.seller" + index + ".sellerY");
+            int z = this.config.getInt("bedwars." + name + ".sellers.seller" + index + ".sellerZ");
+            return this.getWorld(name).getBlock(x, y, z);
+        }
+        else
+        {
+            return null;
+        }
+    }
+
+    public BlockEntitySign getJoinSign(String name)
+    {
+        int x = this.config.getInt("bedwars." + name + ".joinSignX");
+        int y = this.config.getInt("bedwars." + name + ".joinSignY");
+        int z = this.config.getInt("bedwars." + name + ".joinSignZ");
+        return (BlockEntitySign) this.getWorld(name).getBlockEntity(new Location(x, y, z));
+    }
+
     // Setup
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -136,9 +161,19 @@ public class BedWarsAPI
         return this.config.getInt("bedwars."+this.plugin.getBedWarsAPI().getSetupName(player)+".claySpawners.lastIndex");
     }
 
+    public Integer getLastIndexOfIronSpawner(Player player)
+    {
+        return this.config.getInt("bedwars."+this.plugin.getBedWarsAPI().getSetupName(player)+".ironSpawners.lastIndex");
+    }
+
     public Integer getLastIndexOfGoldSpawner(Player player)
     {
         return this.config.getInt("bedwars."+this.plugin.getBedWarsAPI().getSetupName(player)+".goldSpawners.lastIndex");
+    }
+
+    public Integer getLastIndexOfItemSeller(Player player)
+    {
+        return this.config.getInt("bedwars."+this.plugin.getBedWarsAPI().getSetupName(player)+".sellers.lastIndex");
     }
 
     public String getSetupName(Player player)
@@ -181,6 +216,16 @@ public class BedWarsAPI
         return this.config.getBoolean("bedwars.setup."+player.getName()+".goldSpawner");
     }
 
+    public Boolean getSetupItemSeller(Player player)
+    {
+        return this.config.getBoolean("bedwars.setup."+player.getName()+".seller");
+    }
+
+    public Boolean getSetupJoinSign(Player player)
+    {
+        return this.config.getBoolean("bedwars.setup."+player.getName()+".joinsign");
+    }
+
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
@@ -201,23 +246,25 @@ public class BedWarsAPI
     public void setupWorld(Player player, String name)
     {
         List<String> names = this.getNames();
+        if(names.contains(name))
+        {
+            player.sendMessage("A BedWars with the name "+ name +" already exists.");
+        }
         names.add(name);
         this.config.set("names", names);
 
         this.config.set("bedwars.setup."+player.getName()+".world", true);
         this.config.set("bedwars.setup."+player.getName()+".name", name);
+        this.config.set("bedwars."+this.getSetupName(player)+".setupPlayer", player.getName());
+        this.config.set("bedwars."+this.getSetupName(player)+".setup", true);
         this.config.save(this.file);
     }
 
     public void setWorld(Player player, Level level)
     {
         this.config.set("bedwars."+this.getSetupName(player)+".world", level.getName());
-        this.config.set("bedwars."+this.getSetupName(player)+".setup", true);
-        this.config.set("bedwars."+this.getSetupName(player)+".setupPlayer", player.getName());
         this.config.set("bedwars.setup."+player.getName()+".world", false);
         this.config.save(this.file);
-
-        this.setupTeamNumber(player);
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -233,8 +280,6 @@ public class BedWarsAPI
         this.config.set("bedwars.setup."+player.getName()+".teamNumber", false);
         this.config.set("bedwars."+this.getSetupName(player)+".teamNumber", number);
         this.config.save(this.file);
-
-        this.setupPlayerPerTeam(player);
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -250,8 +295,6 @@ public class BedWarsAPI
         this.config.set("bedwars.setup."+player.getName()+".playerPerTeam", false);
         this.config.set("bedwars."+this.getSetupName(player)+".playerPerTeam", number);
         this.config.save(this.file);
-
-        this.setupBed(player);
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -274,7 +317,6 @@ public class BedWarsAPI
         {
             this.config.set("bedwars.setup."+player.getName()+".beds", false);
             player.sendMessage("§aFor each team, hit a block of clay with the left or right mouse button to add them as clay spawner.");
-            this.setupClaySpawner(player);
         }
 
         this.config.save(this.file);
@@ -299,7 +341,6 @@ public class BedWarsAPI
         {
             this.config.set("bedwars.setup."+player.getName()+".claySpawner", false);
             player.sendMessage("§aFor each team, hit a block of iron with the left or right mouse button to add them as iron spawner.");
-            this.setupIronSpawner(player);
         }
 
         this.config.save(this.file);
@@ -347,10 +388,133 @@ public class BedWarsAPI
         if(index == this.getTeamNumber(this.getSetupName(player)))
         {
             this.config.set("bedwars.setup."+player.getName()+".goldSpawner", false);
-            player.sendMessage("§aHit the block that will be marked as the lobby spawn point.");
+            player.sendMessage("§aFor each team, hit a block with the left or right mouse button to add them as ground for the item seller.");
         }
 
         this.config.save(this.file);
+    }
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public void setupItemSeller(Player player)
+    {
+        this.config.set("bedwars.setup."+player.getName()+".seller", true);
+        this.config.save(this.file);
+    }
+
+    public void setItemSeller(Player player, Block block, int index)
+    {
+        this.config.set("bedwars."+this.getSetupName(player)+".sellers.lastIndex", index);
+        this.config.save(this.file);
+        this.config.set("bedwars."+this.getSetupName(player)+".sellers.seller"+index+".sellerX", block.getX());
+        this.config.set("bedwars."+this.getSetupName(player)+".sellers.seller"+index+".sellerY", block.getY());
+        this.config.set("bedwars."+this.getSetupName(player)+".sellers.seller"+index+".sellerZ", block.getZ());
+        if(index == this.getTeamNumber(this.getSetupName(player)))
+        {
+            this.config.set("bedwars.setup."+player.getName()+".seller", false);
+            player.sendMessage("§aFinal step!; Hit the sign in another world as the BedWars world with which the players can enter the round with the left or right mouse button.");
+        }
+
+        this.config.save(this.file);
+    }
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public void setupJoinSign(Player player)
+    {
+        this.config.set("bedwars.setup."+player.getName()+".joinSign", true);
+        this.config.save(this.file);
+    }
+
+    public void setJoinSign(Player player, BlockSignPost block)
+    {
+
+        this.config.save(this.file);
+        this.config.set("bedwars."+this.getSetupName(player)+".joinSignX", block.getX());
+        this.config.set("bedwars."+this.getSetupName(player)+".joinSignY", block.getY());
+        this.config.set("bedwars."+this.getSetupName(player)+".joinSignZ", block.getZ());
+        this.config.set("bedwars.setup."+player.getName()+".joinSign", false);
+
+        ConfigSection section = this.config.getSection("bedwars."+this.getSetupName(player));
+        section.remove("setupPlayer");
+        this.config.set("bedwars."+this.getSetupName(player)+".setup", false);
+
+        BlockEntitySign blockEntity = (BlockEntitySign) block.getLevel().getBlockEntity(block.getLocation());
+        if (blockEntity == null) {
+            player.sendMessage("§cError: Unable to find block entity for the sign at " + block.getX() + " " + block.getY() + " " + block.getZ() + " in world " + player.getLevel());
+        }
+        else
+        {
+            String[] text = new String[4];
+            if(this.getPlayerPerTeam(this.getSetupName(player)) == 1)
+            {
+                text[0] = "§3BedWars Solo";
+            }
+            if(this.getPlayerPerTeam(this.getSetupName(player)) == 2)
+            {
+                text[0] = "§3BedWars Duo";
+            }
+            if(this.getPlayerPerTeam(this.getSetupName(player)) == 3)
+            {
+                text[0] = "§3BedWars Trio";
+            }
+            if(this.getPlayerPerTeam(this.getSetupName(player)) == 4)
+            {
+                text[0] = "§3BedWars Squad";
+            }
+            if(this.getPlayerPerTeam(this.getSetupName(player)) == 5)
+            {
+                text[0] = "§3BedWars Quint";
+            }
+            if(this.getPlayerPerTeam(this.getSetupName(player)) == 6)
+            {
+                text[0] = "§3BedWars Sext";
+            }
+            if(this.getPlayerPerTeam(this.getSetupName(player)) == 7)
+            {
+                text[0] = "§3BedWars Sept";
+            }
+            if(this.getPlayerPerTeam(this.getSetupName(player)) == 7)
+            {
+                text[0] = "§3BedWars Oct";
+            }
+
+            if(this.getTeamNumber(this.getSetupName(player)) == 2)
+            {
+                text[1] = "§92 Teams";
+            }
+            else if(this.getTeamNumber(this.getSetupName(player)) == 3)
+            {
+                text[1] = "§93 Teams";
+            }
+            else if(this.getTeamNumber(this.getSetupName(player)) == 4)
+            {
+                text[1] = "§94 Teams";
+            }
+            else if(this.getTeamNumber(this.getSetupName(player)) == 5)
+            {
+                text[1] = "§95 Teams";
+            }
+            else if(this.getTeamNumber(this.getSetupName(player)) == 6)
+            {
+                text[1] = "§96 Teams";
+            }
+            else if(this.getTeamNumber(this.getSetupName(player)) == 7)
+            {
+                text[1] = "§97 Teams";
+            }
+            else if(this.getTeamNumber(this.getSetupName(player)) == 8)
+            {
+                text[1] = "§98 Teams";
+            }
+            text[4] = "[§0"+this.getSetupName(player)+"§f]";
+            text[2] = "§a0 / 0";
+            blockEntity.setText(text);
+            player.sendMessage("§aSetup done!");
+        }
+
+        this.config.save(this.file);
+
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
