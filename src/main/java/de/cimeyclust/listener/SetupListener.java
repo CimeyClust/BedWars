@@ -7,6 +7,7 @@ import cn.nukkit.blockentity.BlockEntity;
 import cn.nukkit.blockentity.BlockEntitySign;
 import cn.nukkit.event.EventHandler;
 import cn.nukkit.event.Listener;
+import cn.nukkit.event.block.BlockBreakEvent;
 import cn.nukkit.event.player.PlayerChatEvent;
 import cn.nukkit.event.player.PlayerInteractEvent;
 import cn.nukkit.event.player.PlayerMessageEvent;
@@ -98,15 +99,14 @@ public class SetupListener implements Listener
                 player.sendMessage("§aFor each team, hit a bed with the left or right mouse button to add them.");
                 this.plugin.getBedWarsAPI().setupBed(player);
                 player.sendMessage("§a"+this.plugin.getBedWarsAPI().getTeamNumber(this.plugin.getBedWarsAPI().getSetupName(player))+" left!");
-                return;
             }
             else
             {
                 player.sendMessage("§cYou have to enter a whole positive number, greater than 0; Cancellation!");
                 event.setCancelled(true);
                 this.plugin.getBedWarsAPI().setupCancel(player);
-                return;
             }
+            return;
         }
         else if(this.plugin.getBedWarsAPI().getSetupBed(player))
         {
@@ -178,8 +178,17 @@ public class SetupListener implements Listener
 
         if(event.getAction().equals(PlayerInteractEvent.Action.LEFT_CLICK_BLOCK) || event.getAction().equals(PlayerInteractEvent.Action.RIGHT_CLICK_BLOCK))
         {
-            
+            if(this.plugin.getBedWarsAPI().getSetupBed(player))
+            {
+                
+            }
         }
+    }
+
+    @EventHandler
+    public void onPlayerBreakBlock(BlockBreakEvent event)
+    {
+
     }
 
     @EventHandler

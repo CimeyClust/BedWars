@@ -21,6 +21,7 @@ public class BedWarsAPI
     private BedWars plugin;
     private File file;
     private Config config;
+    public int index;
 
     public BedWarsAPI(BedWars plugin) {
         this.plugin = plugin;
@@ -248,7 +249,9 @@ public class BedWarsAPI
         List<String> names = this.getNames();
         if(names.contains(name))
         {
-            player.sendMessage("A BedWars with the name "+ name +" already exists.");
+            player.sendMessage("§cA BedWars with the name "+ name +" already exists; Cancellation!");
+            this.setupCancel(player);
+            return;
         }
         names.add(name);
         this.config.set("names", names);

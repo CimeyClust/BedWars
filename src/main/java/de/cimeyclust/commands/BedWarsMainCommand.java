@@ -32,7 +32,7 @@ public class BedWarsMainCommand extends Command {
 
                                     if (name instanceof String) {
                                         this.plugin.getBedWarsAPI().setupWorld(player, name);
-                                        player.sendMessage("§aThe name of the BedWars, you are creating is " + name + ".\n Type in the name of the world you want BedWars to take place in. (Type cancel to cancel the setup!)");
+                                        player.sendMessage("§aThe name of the BedWars, you are creating is " + name + ".\n§6Type in the name of the world you want BedWars to take place in. (Type cancel to cancel the setup!)");
                                     } else {
                                         player.sendMessage("§cArgument 2 have to be a string and not a number!");
                                         player.sendMessage("§c" + this.getUsage());
