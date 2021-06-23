@@ -2,6 +2,7 @@ package de.cimeyclust.util;
 
 import cn.nukkit.Player;
 import cn.nukkit.block.*;
+import cn.nukkit.blockentity.BlockEntityBed;
 import cn.nukkit.blockentity.BlockEntitySign;
 import cn.nukkit.entity.Entity;
 import cn.nukkit.entity.EntityCreature;
@@ -12,6 +13,7 @@ import cn.nukkit.math.Vector3;
 import cn.nukkit.utils.BlockColor;
 import cn.nukkit.utils.Config;
 import cn.nukkit.utils.ConfigSection;
+import cn.nukkit.utils.DyeColor;
 import de.cimeyclust.BedWars;
 
 import java.io.File;

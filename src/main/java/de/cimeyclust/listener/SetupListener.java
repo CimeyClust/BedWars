@@ -3,14 +3,11 @@ package de.cimeyclust.listener;
 
 import cn.nukkit.Player;
 import cn.nukkit.block.*;
-import cn.nukkit.blockentity.BlockEntity;
-import cn.nukkit.blockentity.BlockEntitySign;
 import cn.nukkit.event.EventHandler;
 import cn.nukkit.event.Listener;
 import cn.nukkit.event.block.BlockBreakEvent;
 import cn.nukkit.event.player.PlayerChatEvent;
 import cn.nukkit.event.player.PlayerInteractEvent;
-import cn.nukkit.event.player.PlayerMessageEvent;
 import cn.nukkit.event.player.PlayerQuitEvent;
 import cn.nukkit.level.Level;
 import de.cimeyclust.BedWars;
@@ -188,31 +185,31 @@ public class SetupListener implements Listener
                     }
                     else if(this.plugin.getBedWarsAPI().getLastIndexOfBeds(player) == 1)
                     {
-                        this.plugin.getBedWarsAPI().setBed(player, (BlockBed) block, 2, "red");
+                        this.plugin.getBedWarsAPI().setBed(player, (BlockBed) block, 2, "blue");
                     }
                     else if(this.plugin.getBedWarsAPI().getLastIndexOfBeds(player) == 2)
                     {
-                        this.plugin.getBedWarsAPI().setBed(player, (BlockBed) block, 3, "red");
+                        this.plugin.getBedWarsAPI().setBed(player, (BlockBed) block, 3, "yellow");
                     }
                     else if(this.plugin.getBedWarsAPI().getLastIndexOfBeds(player) == 3)
                     {
-                        this.plugin.getBedWarsAPI().setBed(player, (BlockBed) block, 4, "red");
+                        this.plugin.getBedWarsAPI().setBed(player, (BlockBed) block, 4, "purple");
                     }
                     else if(this.plugin.getBedWarsAPI().getLastIndexOfBeds(player) == 4)
                     {
-                        this.plugin.getBedWarsAPI().setBed(player, (BlockBed) block, 5, "red");
+                        this.plugin.getBedWarsAPI().setBed(player, (BlockBed) block, 5, "black");
                     }
                     else if(this.plugin.getBedWarsAPI().getLastIndexOfBeds(player) == 5)
                     {
-                        this.plugin.getBedWarsAPI().setBed(player, (BlockBed) block, 6, "red");
+                        this.plugin.getBedWarsAPI().setBed(player, (BlockBed) block, 6, "green");
                     }
                     else if(this.plugin.getBedWarsAPI().getLastIndexOfBeds(player) == 6)
                     {
-                        this.plugin.getBedWarsAPI().setBed(player, (BlockBed) block, 7, "red");
+                        this.plugin.getBedWarsAPI().setBed(player, (BlockBed) block, 7, "white");
                     }
                     else if(this.plugin.getBedWarsAPI().getLastIndexOfBeds(player) == 7)
                     {
-                        this.plugin.getBedWarsAPI().setBed(player, (BlockBed) block, 8, "red");
+                        this.plugin.getBedWarsAPI().setBed(player, (BlockBed) block, 8, "orange");
                     }
                 }
                 else
