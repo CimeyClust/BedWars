@@ -9,6 +9,7 @@ import cn.nukkit.entity.passive.EntityVillager;
 import cn.nukkit.level.Level;
 import cn.nukkit.level.Location;
 import cn.nukkit.math.Vector3;
+import cn.nukkit.utils.BlockColor;
 import cn.nukkit.utils.Config;
 import cn.nukkit.utils.ConfigSection;
 import de.cimeyclust.BedWars;
@@ -154,27 +155,27 @@ public class BedWarsAPI
 
     public Integer getLastIndexOfBeds(Player player)
     {
-        return this.config.getInt("bedwars."+this.plugin.getBedWarsAPI().getSetupName(player)+".beds.lastIndex");
+        return this.config.getInt("bedwars."+this.plugin.getBedWarsAPI().getSetupName(player)+".beds.lastIndex", 0);
     }
 
     public Integer getLastIndexOfClaySpawner(Player player)
     {
-        return this.config.getInt("bedwars."+this.plugin.getBedWarsAPI().getSetupName(player)+".claySpawners.lastIndex");
+        return this.config.getInt("bedwars."+this.plugin.getBedWarsAPI().getSetupName(player)+".claySpawners.lastIndex", 0);
     }
 
     public Integer getLastIndexOfIronSpawner(Player player)
     {
-        return this.config.getInt("bedwars."+this.plugin.getBedWarsAPI().getSetupName(player)+".ironSpawners.lastIndex");
+        return this.config.getInt("bedwars."+this.plugin.getBedWarsAPI().getSetupName(player)+".ironSpawners.lastIndex", 0);
     }
 
     public Integer getLastIndexOfGoldSpawner(Player player)
     {
-        return this.config.getInt("bedwars."+this.plugin.getBedWarsAPI().getSetupName(player)+".goldSpawners.lastIndex");
+        return this.config.getInt("bedwars."+this.plugin.getBedWarsAPI().getSetupName(player)+".goldSpawners.lastIndex", 0);
     }
 
     public Integer getLastIndexOfItemSeller(Player player)
     {
-        return this.config.getInt("bedwars."+this.plugin.getBedWarsAPI().getSetupName(player)+".sellers.lastIndex");
+        return this.config.getInt("bedwars."+this.plugin.getBedWarsAPI().getSetupName(player)+".sellers.lastIndex", 0);
     }
 
     public String getSetupName(Player player)
@@ -316,6 +317,8 @@ public class BedWarsAPI
         this.config.set("bedwars."+this.getSetupName(player)+".beds.team"+index+".bedY", blockBed.getY());
         this.config.set("bedwars."+this.getSetupName(player)+".beds.team"+index+".bedZ", blockBed.getZ());
         this.config.set("bedwars."+this.getSetupName(player)+".beds.team"+index+".teamColor", teamColor);
+        BlockBed bed = new BlockBed();
+        bed.place(bed.toItem(), bed, bed, blockBed.getBlockFace(), blockBed.getX(), blockBed.getY(), blockBed.getZ(), player);
         if(index == this.getTeamNumber(this.getSetupName(player)))
         {
             this.config.set("bedwars.setup."+player.getName()+".beds", false);

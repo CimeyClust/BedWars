@@ -180,7 +180,46 @@ public class SetupListener implements Listener
         {
             if(this.plugin.getBedWarsAPI().getSetupBed(player))
             {
-                
+                if(block instanceof BlockBed)
+                {
+                    if(this.plugin.getBedWarsAPI().getLastIndexOfBeds(player) == 0)
+                    {
+                        this.plugin.getBedWarsAPI().setBed(player, (BlockBed) block, 1, "red");
+                    }
+                    else if(this.plugin.getBedWarsAPI().getLastIndexOfBeds(player) == 1)
+                    {
+                        this.plugin.getBedWarsAPI().setBed(player, (BlockBed) block, 2, "red");
+                    }
+                    else if(this.plugin.getBedWarsAPI().getLastIndexOfBeds(player) == 2)
+                    {
+                        this.plugin.getBedWarsAPI().setBed(player, (BlockBed) block, 3, "red");
+                    }
+                    else if(this.plugin.getBedWarsAPI().getLastIndexOfBeds(player) == 3)
+                    {
+                        this.plugin.getBedWarsAPI().setBed(player, (BlockBed) block, 4, "red");
+                    }
+                    else if(this.plugin.getBedWarsAPI().getLastIndexOfBeds(player) == 4)
+                    {
+                        this.plugin.getBedWarsAPI().setBed(player, (BlockBed) block, 5, "red");
+                    }
+                    else if(this.plugin.getBedWarsAPI().getLastIndexOfBeds(player) == 5)
+                    {
+                        this.plugin.getBedWarsAPI().setBed(player, (BlockBed) block, 6, "red");
+                    }
+                    else if(this.plugin.getBedWarsAPI().getLastIndexOfBeds(player) == 6)
+                    {
+                        this.plugin.getBedWarsAPI().setBed(player, (BlockBed) block, 7, "red");
+                    }
+                    else if(this.plugin.getBedWarsAPI().getLastIndexOfBeds(player) == 7)
+                    {
+                        this.plugin.getBedWarsAPI().setBed(player, (BlockBed) block, 8, "red");
+                    }
+                }
+                else
+                {
+                    player.sendMessage("§cYou have to click a bed!\n§6Try again or type /cancel, to cancel.");
+                }
+                event.setCancelled(true);
             }
         }
     }
